@@ -1,0 +1,7 @@
+{
+    "defaultDatabase":"amiable-crane-429712-v9",
+    "defaultSchema": "labs",
+    "assertionSchema": "labs_assertions",
+    "warehouse": "bigquery",
+    "defaultLocation": "europe-west1"
+}
