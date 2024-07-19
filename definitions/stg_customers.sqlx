@@ -20,7 +20,7 @@ config {
     tags: ["STAGING"],
     //disabled: true
 }
- 
+
 SELECT
   SAFE_CAST(customer_id AS INT64) AS customer_id,
   first_name,
@@ -32,9 +32,9 @@ SELECT
   state,
   SAFE_CAST(postal_code AS INT64) AS postal_code,
   country,
-  SAFE_CAST(created_at AS DATE) AS created_at,
-  SAFE_CAST(updated_at AS STRING) AS updated_at
+  SAFE_CAST(created_at AS DATE) AS created_date,
+  SAFE_CAST(updated_at AS DATE) AS update_date
 FROM
   ${ref("customers")}
-QUALIFY row_number() OVER (PARTITION BY customer_id) = 1
- 
+QUALIFY
+  ROW_NUMBER() OVER (PARTITION BY customer_id) = 1

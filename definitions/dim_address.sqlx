@@ -1,0 +1,23 @@
+config {
+    type: "table",
+
+    tags: ["DIM"],
+    bigquery: {
+        labels: {
+            "type": "dim"
+        },
+        partitionBy: "update_date",
+        requirePartitionFilter: true,
+        clusterBy: ["country"]
+    }
+}
+    
+SELECT
+  *
+FROM
+  ${ref("stg_address")}
+WHERE update_date = current_date() 
+QUALIFY
+  ROW_NUMBER() OVER (PARTITION BY address_id) = 1
+
+
