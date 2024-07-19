@@ -1,0 +1,37 @@
+config {
+    type: "table",
+    schema: "lab2",
+
+    description: "Addresses table",
+    columns: {
+        address_id : "Address's identifier",
+        city : "Address's city",
+        state : "Address's state",
+        postal_code : "Address's postal code",
+        country : "Address's country",
+        created_at : "Address's creation timestamp",
+        updated_at : "Address's data update timestamp"
+    },
+   tags: ["STAGING"],
+   bigquery: {
+        labels: {
+            "type": "staging"
+        },
+        partitionBy: "update_date",
+        requirePartitionFilter: true,
+        clusterBy: ["country"]
+    }
+
+}
+
+SELECT
+  SAFE_CAST(address_id AS INT64) AS address_id,
+  SAFE_CAST(city AS STRING) AS city,
+  SAFE_CAST(state AS STRING) AS state,
+  SAFE_CAST(postal_code AS INT64) AS postal_code,
+  SAFE_CAST(country AS STRING) AS country,
+  SAFE_CAST(created_at AS DATE) AS creation_date,
+  SAFE_CAST(updated_at AS DATE) AS update_date
+FROM
+  ${ref("address")}
+
