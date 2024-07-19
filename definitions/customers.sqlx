@@ -1,0 +1,5 @@
+config {
+    type: "declaration",
+    database: "amiable-crane-429712-v9",
+    schema: "lab2"
+}

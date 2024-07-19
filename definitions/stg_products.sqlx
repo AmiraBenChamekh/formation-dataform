@@ -1,0 +1,49 @@
+config {
+    type: "table",
+    schema: "lab2",
+
+    description: "Products table",
+    columns: {
+        product_id : "Product's identifier",
+        product_name : "Product's name",
+        description : "Product's description",
+        price : "Product's price",
+        category : "Product's category",
+        supplier_id : "Supplier's identifier",
+        created_at : "Product's creation timestamp",
+        updated_at : "Product's data update timestamp"
+    },
+   tags: ["STAGING"],
+
+   bigquery: {
+        labels: {
+            "type": "staging"
+        },
+        partitionBy: "update_date",
+        requirePartitionFilter: true,
+        clusterBy: ["category"]
+    }
+
+}
+
+WITH
+  cte AS (
+SELECT
+  SAFE_CAST(product_id AS INT64) AS product_id,
+  SAFE_CAST(product_name AS STRING) AS product_name,
+  SAFE_CAST(description AS STRING) AS description,
+  SAFE_CAST(price AS FLOAT64) AS price,
+  SAFE_CAST(category AS STRING) AS category,
+  SAFE_CAST(supplier_id AS INT64) AS supplier_id,
+  SAFE_CAST(created_at AS DATE) AS creation_date,
+  SAFE_CAST(updated_at AS DATE) AS update_date
+FROM
+  ${ref("products")}
+  )
+
+SELECT
+  *
+FROM
+  cte
+WHERE product_id IS NOT NULL
+
