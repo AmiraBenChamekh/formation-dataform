@@ -1,0 +1,22 @@
+config {
+    type: "table",
+
+    tags: ["DIM"],
+    bigquery: {
+        labels: {
+            "type": "dim"
+        },
+        partitionBy: "update_date",
+        requirePartitionFilter: true
+    }
+}
+    
+SELECT
+  *
+FROM
+  ${ref("stg_customers")}
+WHERE update_date = current_date() 
+QUALIFY
+  ROW_NUMBER() OVER (PARTITION BY customer_id) = 1
+
+

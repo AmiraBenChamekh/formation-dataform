@@ -1,0 +1,23 @@
+config {
+    type: "table",
+
+    tags: ["DIM"],
+    bigquery: {
+        labels: {
+            "type": "dim"
+        },
+        partitionBy: "update_date",
+        requirePartitionFilter: true,
+        clusterBy: ["category"]
+    }
+}
+    
+SELECT
+  *
+FROM
+  ${ref("stg_products")}
+WHERE update_date = current_date() 
+QUALIFY
+  ROW_NUMBER() OVER (PARTITION BY product_id) = 1
+
+

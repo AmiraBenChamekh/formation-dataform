@@ -1,0 +1,30 @@
+config {
+    type: "incremental",
+    uniqueKey: ["id_transaction"],
+    protected:true,
+    description: "Transactions table",
+
+    tags: ["FACT"],
+    bigquery: {
+        labels: {
+            "type": "fact"
+        },
+        partitionBy: "updated_date",
+        requirePartitionFilter: true
+    }
+}
+    
+SELECT
+  *
+FROM
+  ${ref("stg_transactions")}
+  ${
+      when(incremental(),
+          `WHERE updated_date >= date_sub(current_date(), interval 1 DAY)`,
+          `WHERE updated_date >= "1970-01-01"`
+          
+      )
+  }
+
+
+
